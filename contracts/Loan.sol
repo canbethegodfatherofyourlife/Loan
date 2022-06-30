@@ -16,7 +16,7 @@ contract Loan is Ownable, Godfather, PriceConsumerV3 {
     }
 
     // mapping addresses to the Details
-    mapping(address => Details) Loans;
+    mapping(address => Details) public Loans;
 
     event Deposit(uint256 deposit_amount, uint256 minted_amount);
     event Withdraw(uint256 withdraw_amount, uint256 repay_amount);

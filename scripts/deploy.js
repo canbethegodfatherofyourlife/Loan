@@ -1,13 +1,11 @@
-const hre = require("hardhat");
 
 async function main() {
 
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const [deployer] = await ethers.getSigners();
 
-  await greeter.deployed();
-
-  console.log("Greeter deployed to:", greeter.address);
+  const Loan = await ethers.getContractFactory("Loan");
+  const token = await Loan.deploy();
+  console.log("Token address: " + token.address);
 }
 
 main()
