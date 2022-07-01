@@ -11,11 +11,14 @@ function App() {
   const { ethereum } = window;
   const [deposit, setDeposit] = useState(0);
   const [withdraw1, setWithdraw] = useState(0);
+  const [collline, setCollLine] = useState('')
+  const [depositline1, setDepositLine] = useState('')
+  const [collline1, setCollLine1] = useState('')
+  const [depositline2, setDepositLine1] = useState('')
 
   const storeAdrress = async() => {
     await ethereum.request( { method: 'eth_requestAccounts' } );
     const [ account ] = await ethereum.request( { method: 'eth_accounts' } );
-    console.log( account );
     return account;
   }
 
@@ -35,7 +38,8 @@ function App() {
       const debt= ( await Deposit1.Loans( acct ) ).debtAmount
       const debt1 = parseInt(debt._hex)/Math.pow(10,18)
       console.log( debt1);
-     
+      setCollLine(`Collateral Amount: ${coll}`)
+      setDepositLine(`Loan Amount: ${debt1}`)
     }else{
       console.log("Metamask not found")
     }
@@ -58,7 +62,8 @@ function App() {
       const debt= ( await Withdraw1.Loans( acct1 ) ).debtAmount
       const debt1 = parseInt(debt._hex)/Math.pow(10,18)
       console.log( debt1);
-     
+      setCollLine1(`Collateral Amount: ${coll}`)
+      setDepositLine1(`Loan Amount: ${debt1}`)
     }else{
       console.log("Metamask not found")
     }
@@ -84,6 +89,8 @@ function App() {
         />
         <button onClick={getEthereumContract}> SUBMIT </button>
      </div>
+     <h1>{collline}</h1>
+     <h1>{depositline1}</h1>
      <div>
         <input
           placeholder="Withdraw collateral"
@@ -93,6 +100,8 @@ function App() {
         />
         <button onClick={withdrawContract}> SUBMIT1 </button>
      </div> 
+     <h1>{collline1}</h1>
+     <h1>{depositline2}</h1>
     </>
 
 )}
