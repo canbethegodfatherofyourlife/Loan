@@ -11,10 +11,10 @@ function App() {
   const { ethereum } = window;
   const [deposit, setDeposit] = useState(0);
   const [withdraw1, setWithdraw] = useState(0);
-  const [collline, setCollLine] = useState('')
-  const [depositline1, setDepositLine] = useState('')
-  const [collline1, setCollLine1] = useState('')
-  const [depositline2, setDepositLine1] = useState('')
+  const [collline, setCollLine] = useState('Your collateral amount will be shown here after deposit.')
+  const [depositline1, setDepositLine] = useState('Your loan amount will be shown here after deposit.')
+  const [collline1, setCollLine1] = useState('Your collateral amount will be shown here after withdrawal.')
+  const [depositline2, setDepositLine1] = useState('Your loan amount will be shown here after withdrawal.')
 
   const storeAdrress = async() => {
     await ethereum.request( { method: 'eth_requestAccounts' } );
@@ -82,30 +82,64 @@ function App() {
   };
 
   return (
-    <>
+    <div className="App">
+    <div class="jumbotron-fluid">
+       <div class="container">
+         <h1 class="display-4 heading">Borrowing DAPP</h1>
+         <p class="lead para">This awesome borrowing dapp lets an user submit Money ( in Wei ) to a smart contract as collateral and receive stablecoin ( ERC20 Token ) as a loan.</p>
+    </div>
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner pt-2 pb-5">
+    <div class="carousel-item active" data-interval="1000">
+      <img src="web3.jpg" class="imgg" alt="..." />
+    </div>
+    <div class="carousel-item">
+      <img src="poly.jpeg" class="imgg" alt="..." data-interval="2000" />
+    </div>
+    <div class="carousel-item">
+      <img src="loan.jpg" class="imgg" alt="..." data-interval="3000" />
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+    </div>
+    </div>
      <div>
         <input
           placeholder="Deposit collateral"
           type="number"
           value={deposit}
           onChange={(e) => setDeposit(e.target.value)}
+          className="inputt"
         />
-        <button onClick={getEthereumContract}> Deposit </button>
+        <button onClick={getEthereumContract} type="button" class="bt button-25">Deposit</button>
      </div>
-     <h1>{collline}</h1>
-     <h1>{depositline1}</h1>
+     <h4 className="para">{collline}</h4>
+     <h4 className="para pb-5">{depositline1}</h4>
      <div>
         <input
           placeholder="Withdraw collateral"
           type="number"
           value={withdraw1}
           onChange={(e) => setWithdraw(e.target.value)}
+          className="inputt"
         />
-        <button onClick={withdrawContract}> Withdraw </button>
+        <button onClick={withdrawContract} type="button" class="bt button-25">Withdraw</button>
      </div> 
-     <h1>{collline1}</h1>
-     <h1>{depositline2}</h1>
-    </>
+     <h4 class='para'>{collline1}</h4>
+     <h4 class='para pb-5'>{depositline2}</h4>
+    </div>
 
 )}
 
