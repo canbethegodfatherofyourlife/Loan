@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 
 import abi from "./artifacts/contracts/Loan.sol/Loan.json";
 const contractABI = abi.abi;
-const contractAddress = "0x50c5c7820c92c45963858e749EEa7a16f38472de";
+const contractAddress = "0x57F6FD802A9b6ec2c6a924f17701caec8F00ff47";
 // 0x2ea89164B7C88E08034358c1c1b49144EE1D1A9A
 
 function App() {
@@ -30,8 +30,8 @@ function App() {
       const provider = new ethers.providers.Web3Provider(ethereum);
       const signer =  provider.getSigner();
       const Deposit1 = new ethers.Contract(contractAddress, contractABI, signer);
-      const transaction = await Deposit1.deposit(deposit)
-      transaction.wait();
+      const transaction = await Deposit1.deposit(deposit*Math.pow(10,8),{value: ethers.utils.parseEther(deposit)});
+      await transaction.wait();
       setDeposit(0);
       const acct = await storeAdrress();
       const { _hex} = ( await Deposit1.Loans( acct ) ).collateralAmount
@@ -57,14 +57,14 @@ function App() {
       const signer =  provider.getSigner();
       const Withdraw1 = new ethers.Contract(contractAddress, contractABI, signer);
       const transaction = await Withdraw1.withdraw(withdraw1)
-      transaction.wait();
+      await transaction.wait();
       const acct1 = await storeAdrress();
       const { _hex} = ( await Withdraw1.Loans( acct1 ) ).collateralAmount
       const coll1 = parseInt(_hex)/Math.pow(10,18)
       console.log(coll1)
       const debt1= ( await Withdraw1.Loans( acct1 ) ).debtAmount
       const debt2 = parseInt(debt1._hex)/Math.pow(10,18)
-      console.log( debt1);
+      console.log(debt2);
       setCollLine1(`Collateral Amount: ${coll1}`)
       setDepositLine1(`Loan Amount: ${debt2}`)
     }else{
@@ -85,8 +85,9 @@ function App() {
     <div className="App">
     <div class="jumbotron-fluid">
        <div class="container">
-         <h1 class="display-4 heading">Borrowing DAPP</h1>
-         <p class="lead para">This awesome borrowing dapp lets an user submit Money ( in Wei ) to a smart contract as collateral and receive stablecoin ( ERC20 Token ) as a loan.</p>
+         <h1 class="display-4 heading">BISWAS</h1>
+         <p class="lead para">This awesome borrowing dapp lets an user submit Money ( in Eth ) to a smart contract as collateral and receive stablecoin ( ERC20 Token ) as a loan.</p>
+         <p class='lead para'>Connect to Rinkeby Network.</p>
     </div>
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
@@ -123,7 +124,7 @@ function App() {
           onChange={(e) => setDeposit(e.target.value)}
           className="inputt"
         />
-        <button onClick={getEthereumContract} type="button" class="bt button-25">Deposit</button>
+        <button onClick={()=> getEthereumContract()} type="button" class="bt button-25">Deposit</button>
      </div>
      <h4 className="para">{collline}</h4>
      <h4 className="para pb-5">{depositline1}</h4>
@@ -135,7 +136,7 @@ function App() {
           onChange={(e) => setWithdraw(e.target.value)}
           className="inputt"
         />
-        <button onClick={withdrawContract} type="button" class="bt button-25">Withdraw</button>
+        <button onClick={()=> withdrawContract()} type="button" class="bt button-25">Withdraw</button>
      </div> 
      <h4 class='para'>{collline1}</h4>
      <h4 class='para pb-5'>{depositline2}</h4>

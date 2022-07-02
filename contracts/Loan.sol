@@ -26,11 +26,11 @@ contract Loan is Ownable, Godfather, PriceConsumerV3 {
     event Withdraw(uint256 withdraw_amount, uint256 repay_amount);
 
     function deposit(uint256 depositAmount) public payable {
-        uint256 mintAmount = depositAmount.mul(getEthUSDPrice());
-        mint(msg.sender, mintAmount);
-        Loans[msg.sender].collateralAmount = Loans[msg.sender].collateralAmount.add(depositAmount);
-        Loans[msg.sender].debtAmount = Loans[msg.sender].debtAmount.add(mintAmount);
-        emit Deposit(depositAmount, mintAmount);
+        uint256 mintAmount = (depositAmount.mul(10**10)).mul(getEthUSDPrice());
+        mint(msg.sender, mintAmount); // token minted takes mintAmount by 10**18
+        Loans[msg.sender].collateralAmount = Loans[msg.sender].collateralAmount.add(msg.value);
+        Loans[msg.sender].debtAmount = Loans[msg.sender].debtAmount.add(msg.value.mul(getEthUSDPrice()));
+        emit Deposit(msg.value, msg.value.mul(getEthUSDPrice()));
     }
 
     function withdraw(uint256 repayAmount) public {
@@ -42,15 +42,11 @@ contract Loan is Ownable, Godfather, PriceConsumerV3 {
             balanceOf(msg.sender) >= repayAmount,
             "not enough tokens in balance"
         );
-        uint256 withdrawAmount = repayAmount.div(getEthUSDPrice());
-        console.log(withdrawAmount);
-        burn(msg.sender, repayAmount);
-        Loans[msg.sender].collateralAmount = Loans[msg.sender].collateralAmount.sub(withdrawAmount);
-        Loans[msg.sender].debtAmount = Loans[msg.sender].debtAmount.sub(repayAmount);
-        console.log(Loans[msg.sender].collateralAmount);
-        console.log(Loans[msg.sender].debtAmount);
-        payable(msg.sender).transfer(withdrawAmount);
-        emit Withdraw(withdrawAmount, repayAmount);
+        burn(msg.sender, repayAmount*1000000000000000000);
+        Loans[msg.sender].collateralAmount = Loans[msg.sender].collateralAmount-(repayAmount/getEthUSDPrice());
+        Loans[msg.sender].debtAmount = Loans[msg.sender].debtAmount-repayAmount;
+        payable(msg.sender).transfer(repayAmount/getEthUSDPrice());
+        emit Withdraw(repayAmount/getEthUSDPrice(), repayAmount);
     }
 
     function getDetails(address user)
