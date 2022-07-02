@@ -11,6 +11,12 @@ module.exports = {
       accounts: [RINKEBY_URL],
       timeout: 60000
     },
+    hardhat: {
+      forking: {
+        enabled: true,
+        url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+      }
+    }
   },
   solidity: {
     version: "0.8.7",
@@ -28,4 +34,4 @@ module.exports = {
     apiKey: "CJJTBF2QU4T4S8GIHRND9TF8TJQ7TAEKFQ"
   }
 
-};
+}

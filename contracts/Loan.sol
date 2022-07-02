@@ -6,7 +6,11 @@ import "./PriceConsumerV3.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
+import './SafeMath.sol';
+
 contract Loan is Ownable, Godfather, PriceConsumerV3 {
+
+    using SafeMath for uint256;
     // store the details of the loan as a struct
     struct Details {
         // the collateral amount of each address
@@ -22,10 +26,10 @@ contract Loan is Ownable, Godfather, PriceConsumerV3 {
     event Withdraw(uint256 withdraw_amount, uint256 repay_amount);
 
     function deposit(uint256 depositAmount) public payable {
-        uint256 mintAmount = depositAmount * getEthUSDPrice();
+        uint256 mintAmount = depositAmount.mul(getEthUSDPrice());
         mint(msg.sender, mintAmount);
-        Loans[msg.sender].collateralAmount += depositAmount;
-        Loans[msg.sender].debtAmount += mintAmount;
+        Loans[msg.sender].collateralAmount = Loans[msg.sender].collateralAmount.add(depositAmount);
+        Loans[msg.sender].debtAmount = Loans[msg.sender].debtAmount.add(mintAmount);
         emit Deposit(depositAmount, mintAmount);
     }
 
@@ -38,11 +42,13 @@ contract Loan is Ownable, Godfather, PriceConsumerV3 {
             balanceOf(msg.sender) >= repayAmount,
             "not enough tokens in balance"
         );
-        uint256 withdrawAmount = repayAmount / getEthUSDPrice();
-
+        uint256 withdrawAmount = repayAmount.div(getEthUSDPrice());
+        console.log(withdrawAmount);
         burn(msg.sender, repayAmount);
-        Loans[msg.sender].collateralAmount -= withdrawAmount;
-        Loans[msg.sender].debtAmount -= repayAmount;
+        Loans[msg.sender].collateralAmount = Loans[msg.sender].collateralAmount.sub(withdrawAmount);
+        Loans[msg.sender].debtAmount = Loans[msg.sender].debtAmount.sub(repayAmount);
+        console.log(Loans[msg.sender].collateralAmount);
+        console.log(Loans[msg.sender].debtAmount);
         payable(msg.sender).transfer(withdrawAmount);
         emit Withdraw(withdrawAmount, repayAmount);
     }
@@ -57,6 +63,6 @@ contract Loan is Ownable, Godfather, PriceConsumerV3 {
 
     function getEthUSDPrice() public view returns (uint256) {
         uint price = uint(getLatestPrice());
-        return price / (10**8);
+        return price.div(10**8);
     }
 }
