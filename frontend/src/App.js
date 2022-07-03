@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 
 import abi from "./artifacts/contracts/Loan.sol/Loan.json";
 const contractABI = abi.abi;
-const contractAddress = "0x57F6FD802A9b6ec2c6a924f17701caec8F00ff47";
+const contractAddress = "0xd1E159a04054dB85b57dcfB9F7d35838e75e1812";
 // 0x2ea89164B7C88E08034358c1c1b49144EE1D1A9A
 
 function App() {
@@ -40,8 +40,8 @@ function App() {
       const debt= ( await Deposit1.Loans( acct ) ).debtAmount
       const debt1 = parseInt(debt._hex)/Math.pow(10,18)
       console.log( debt1);
-      setCollLine(`Collateral Amount: ${coll}`)
-      setDepositLine(`Loan Amount: ${debt1}`)
+      setCollLine(`Collateral Amount: ${coll.toFixed(2)}`)
+      setDepositLine(`Loan Amount: ${debt1.toFixed(2)}`)
     }else{
       console.log("Metamask not found")
     }
@@ -65,8 +65,8 @@ function App() {
       const debt1= ( await Withdraw1.Loans( acct1 ) ).debtAmount
       const debt2 = parseInt(debt1._hex)/Math.pow(10,18)
       console.log(debt2);
-      setCollLine1(`Collateral Amount: ${coll1}`)
-      setDepositLine1(`Loan Amount: ${debt2}`)
+      setCollLine1(`Collateral Amount: ${coll1.toFixed(2)}`)
+      setDepositLine1(`Loan Amount: ${debt2.toFixed(2)}`)
     }else{
       console.log("Metamask not found")
     }

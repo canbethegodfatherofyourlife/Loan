@@ -43,9 +43,9 @@ contract Loan is Ownable, Godfather, PriceConsumerV3 {
             "not enough tokens in balance"
         );
         burn(msg.sender, repayAmount*1000000000000000000);
-        Loans[msg.sender].collateralAmount = Loans[msg.sender].collateralAmount-(repayAmount/getEthUSDPrice());
-        Loans[msg.sender].debtAmount = Loans[msg.sender].debtAmount-repayAmount;
-        payable(msg.sender).transfer(repayAmount/getEthUSDPrice());
+        Loans[msg.sender].collateralAmount = Loans[msg.sender].collateralAmount-((repayAmount*(10**18))/getEthUSDPrice());
+        Loans[msg.sender].debtAmount = Loans[msg.sender].debtAmount-(repayAmount*1000000000000000000);
+        payable(msg.sender).transfer((repayAmount*(10**18))/getEthUSDPrice());
         emit Withdraw(repayAmount/getEthUSDPrice(), repayAmount);
     }
 
